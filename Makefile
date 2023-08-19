@@ -12,7 +12,10 @@ gen_infer_proto:
 echo:
 	python3 internal/protos/inference/test.py
 
-
+mod-init:
+	go mod init github.com/Max-Gabriel-Susman/delphi-inferential-service
+	go mod tidy
+	go mod vendor
 
 mod:
 	go mod tidy 
