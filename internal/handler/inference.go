@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
-	"net/http"
 	"fmt"
+	"net/http"
 
 	"github.com/Max-Gabriel-Susman/delphi-go-kit/delphiweb"
 	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/inference"
@@ -17,7 +17,7 @@ func InferenceEndpoints(app *delphiweb.App, api *inference.API) {
 	ig := inferenceGroup{API: api}
 
 	app.Handle("GET", "/health", ig.HealthCheck)
-	app.Handle("GET", "/generate", ig.GenerateTokens)
+	app.Handle("POST", "/generate", ig.GenerateTokens)
 }
 
 func (ig inferenceGroup) HealthCheck(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -33,9 +33,32 @@ func (ig inferenceGroup) HealthCheck(ctx context.Context, w http.ResponseWriter,
 func (ig inferenceGroup) GenerateTokens(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	// TODO: implement tracer support
 
-	
+	// TODO: separate the business logic from the handler
+	var request inference.GenerateInferenceRequest
+	if err := delphiweb.Decode(r.Body, &request); err != nil {
+		return err
+	}
 
-	fmt.Println("Tokens generated")
+	fmt.Println("un-tokenized input: ", request.Inputs) // delete
 
-	return delphiweb.Respond(ctx, w, struct{}{}, http.StatusOK)
+	tokenizedInput := request.TokenizeInput()
+
+	fmt.Println("tokenized input: ", tokenizedInput) // delete
+
+	response := inference.GeneratedInferenceResponse{
+		Details: inference.GeneratedInferenceResponseDetails{
+			Tokens: tokenizedInput,
+		},
+	}
+
+	fmt.Println("pre reversed tokens: ", response.Details.Tokens) // delete
+
+	// reverse tokens // just for testing
+	response.ReverseTokens()
+
+	fmt.Println("post reversed tokens: ", response.Details.Tokens) // delete
+
+	fmt.Println("Tokens generated") // delete
+
+	return delphiweb.Respond(ctx, w, response, http.StatusOK)
 }
