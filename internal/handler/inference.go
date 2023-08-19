@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"net/http"
+	"fmt"
 
 	"github.com/Max-Gabriel-Susman/delphi-go-kit/delphiweb"
 	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/inference"
@@ -22,6 +23,8 @@ func (ig inferenceGroup) HealthCheck(ctx context.Context, w http.ResponseWriter,
 	// TODO: implement tracer support
 
 	// TODO: implemnet 503 Text generation inference is down logic
+
+	fmt.Println("HealthCheck served")
 
 	return delphiweb.Respond(ctx, w, struct{}{}, http.StatusOK)
 }
