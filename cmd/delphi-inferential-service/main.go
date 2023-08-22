@@ -72,7 +72,7 @@ func run(ctx context.Context, _ []string) error {
 	api := http.Server{
 		Handler: h,
 		// Addr:              "127.0.0.1:80",
-		Addr:              "0.0.0.0:8080",
+		Addr:              "0.0.0.0:8082",
 		ReadHeaderTimeout: 2 * time.Second,
 	}
 

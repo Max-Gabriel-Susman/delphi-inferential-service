@@ -80,7 +80,7 @@ local-start-with-db:
 
 local-start:
 	DD_DISABLE=true \
-		API_ADDRESS=0.0.0.0:8080 \
+		API_ADDRESS=0.0.0.0:8082 \
 		INFERENTIAL_DB_USER=usr \
 		INFERENTIAL_DB_PASSWORD=identity \
 		INFERENTIAL_DB_HOST=127.0.0.1 \
