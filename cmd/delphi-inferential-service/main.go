@@ -10,8 +10,10 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc"
 
 	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler"
+	"github.com/Max-Gabriel-Susman/delphi-inferential-service/textgeneration"
 )
 
 const (
@@ -66,6 +68,17 @@ func run(ctx context.Context, _ []string) error {
 		return errors.Wrap(err, "parsing configuration")
 	}
 
+	// create grpc connection
+	conn, err := grpc.Dial("localhost:9092")
+	if err != nil {
+		panic(err)
+	}
+
+	// create text generation client
+	// tgc := textgeneration.NewTextGenerationServiceClient(conn)
+	_ = textgeneration.NewTextGenerationServiceClient(conn)
+
+	// h := handler.API(handler.Deps{}, conn) // needs implementation l8r
 	h := handler.API(handler.Deps{})
 
 	// Start API Service
