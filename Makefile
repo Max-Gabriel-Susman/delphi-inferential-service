@@ -90,3 +90,16 @@ local-start:
 		go run ./cmd/delphi-inferential-service/main.go
 
 local-restart: local-stop local-start
+
+healthcheck-textgen:
+	echo "turn your head and cough"
+
+# pb-gen-tg:
+# 	protoc --go_out=. --go_opt=textgeneration/pb/textgeneration \
+# 		--go-grpc_out=. --go-grpc_opt=paths=./textgeneration/pb/textgeneration \
+# 		textgeneration/pb/textGenerationService.proto
+
+# pb-gen-tg:
+# 	protoc --proto_path=proto textgeneration/pb/*.proto --go_out=textgeneration/pb/textGenerationService --go-grpc_out=textgeneration/pb/textGenerationService
+	
+
