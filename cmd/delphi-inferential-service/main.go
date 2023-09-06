@@ -75,11 +75,11 @@ func run(ctx context.Context, _ []string) error {
 	}
 
 	// create text generation client
-	// tgc := textgeneration.NewTextGenerationServiceClient(conn)
-	_ = textgeneration.NewTextGenerationServiceClient(conn)
+	tgc := textgeneration.NewTextGenerationServiceClient(conn)
+	// _ = textgeneration.NewTextGenerationServiceClient(conn)
 
-	// h := handler.API(handler.Deps{}, conn) // needs implementation l8r
-	h := handler.API(handler.Deps{})
+	h := handler.API(handler.Deps{}, tgc) // needs implementation l8r
+	// h := handler.API(handler.Deps{})
 
 	// Start API Service
 	api := http.Server{
