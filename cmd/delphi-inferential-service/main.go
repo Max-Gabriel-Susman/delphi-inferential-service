@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
+	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -10,13 +13,23 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
+	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/inference"
 	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler"
 )
 
 const (
 	exitCodeErr       = 1
 	exitCodeInterrupt = 2
+	defaultName       = "world"
+)
+
+var (
+	addr = flag.String("addr", "localhost:50052", "the address to connect to")
+	name = flag.String("name", defaultName, "Name to greet")
+	port = flag.Int("port", 50051, "The server port")
 )
 
 func main() {
@@ -79,12 +92,24 @@ func run(ctx context.Context, _ []string) error {
 	// h := handler.API(handler.Deps{}, tgc) // needs implementation l8r
 	h := handler.API(handler.Deps{})
 
-	// Start API Service
+	// Start HTTP Service
 	api := http.Server{
 		Handler: h,
 		// Addr:              "127.0.0.1:80",
 		Addr:              "0.0.0.0:8082",
 		ReadHeaderTimeout: 2 * time.Second,
+	}
+
+	// Start GRPC Service
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterGreeterServer(s, &server{})
+	log.Printf("server listening at %v", lis.Addr())
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 
 	// Make a channel to listen for errors coming from the listener
@@ -116,4 +141,33 @@ func run(ctx context.Context, _ []string) error {
 	}
 
 	return nil
+}
+
+// server is used to implement helloworld.GreeterServer.
+type server struct {
+	pb.UnimplementedGreeterServer
+}
+
+// SayHello implements helloworld.GreeterServer
+func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+	log.Printf("Received: %v", in.GetName())
+
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewGreeterClient(conn)
+
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("Greeting: %s", r.GetMessage())
+
+	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
