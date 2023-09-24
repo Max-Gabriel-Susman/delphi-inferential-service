@@ -6,6 +6,8 @@ option go_package = "github.com/Max-Gabriel-Susman/delphi-inferential-service/in
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  // Sends a Text Generation Request 
+  rpc Generate (GenerateRequest) returns (GenerateReply) {}
 }
 
 // The request message containing the user's name.
@@ -15,5 +17,16 @@ message HelloRequest {
 
 // The response message containing the greetings
 message HelloReply {
+  string message = 1;
+}
+
+
+// The request message containing the user's name.
+message GenerateRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message GenerateReply {
   string message = 1;
 }

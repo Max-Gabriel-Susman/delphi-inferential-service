@@ -87,7 +87,7 @@ local-start:
 		INFERENTIAL_DB_NAME=identity \
 		INFERENTIAL_DB_PORT=3306 \
 		ENABLE_MIGRATE=true \
-		go run ./cmd/delphi-inferential-service/main.go
+		go run ./main.go
 
 local-restart: local-stop local-start
 
@@ -101,5 +101,9 @@ healthcheck-textgen:
 
 # pb-gen-tg:
 # 	protoc --proto_path=proto textgeneration/pb/*.proto --go_out=textgeneration/pb/textGenerationService --go-grpc_out=textgeneration/pb/textGenerationService
-	
 
+build:
+	docker build --tag delphi-model-service .
+
+run: 
+	docker run delphi-model-service
