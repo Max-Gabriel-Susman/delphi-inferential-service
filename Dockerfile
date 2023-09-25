@@ -3,13 +3,31 @@
 # Build the application from source
 FROM golang:1.19 AS build-stage
 
+ENV GO111MODULE=on
+ENV API_ADDRESS=0.0.0.0:8082 
+ENV INFERENTIAL_DB_USER=usr 
+ENV INFERENTIAL_DB_PASSWORD=identity 
+ENV INFERENTIAL_DB_HOST=127.0.0.1 
+ENV INFERENTIAL_DB_NAME=identity 
+ENV INFERENTIAL_DB_PORT=3306 
+ENV ENABLE_MIGRATE=true 
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
+# COPY *.go ./
+COPY . . 
 
+
+
+#RUN go get -v -t .
+# RUN set -x && \
+#     go install github.com/Max-Gabriel-Susman/delphi-inferential-service/inference \ 
+#     go install github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler
+RUN go mod download
+# RUN go get ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -o /delphi-inferential-service
 
 # Run the tests in the container
