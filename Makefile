@@ -105,6 +105,9 @@ healthcheck-textgen:
 build:
 	docker build --tag delphi-model-service .
 
+# docker build --tag brometheus/delphi-inferential-service:v0.1.0 .
+# docker build --tag brometheus/delphi-inferential-service:v0.2.0 .
+
 run: 
 	docker run \
 		-e API_ADDRESS=0.0.0.0:8082 \
@@ -114,4 +117,14 @@ run:
 		-e INFERENTIAL_DB_NAME=identity \
 		-e INFERENTIAL_DB_PORT=3306 \
 		-e ENABLE_MIGRATE=true \
-		delphi-model-service
+		-p 50051:50051 \
+		brometheus/delphi-inferential-service:v0.4.0
+
+push: 
+	docker push brometheus/delphi-model-service:tagname
+
+update:
+	docker build --tag brometheus/delphi-inferential-service:v0.4.1 .
+	docker push brometheus/delphi-inferential-service:v0.4.1
+
+# docker push brometheus/delphi-inferential-service:v0.1.0

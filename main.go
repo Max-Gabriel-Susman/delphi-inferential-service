@@ -14,7 +14,7 @@ import (
 	"github.com/caarlos0/env/v6"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/reflection"
 
 	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/inference"
 	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler"
@@ -27,7 +27,7 @@ const (
 )
 
 var (
-	addr = flag.String("addr", "localhost:50052", "the address to connect to")
+	// addr = flag.String("addr", "localhost:50052", "the address to connect to")
 	name = flag.String("name", defaultName, "Name to greet")
 	port = flag.Int("port", 50051, "The server port")
 )
@@ -108,6 +108,11 @@ func run(ctx context.Context, _ []string) error {
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
+
+	// register the reflection service which allows clients to determine the methods
+	// for this gRPC service
+	reflection.Register(s)
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
@@ -153,45 +158,47 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 	log.Printf("Received: %v", in.GetName())
 
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	// conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// if err != nil {
+	// 	log.Fatalf("did not connect: %v", err)
+	// }
+	// defer conn.Close()
+	// c := pb.NewGreeterClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	// ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	// defer cancel()
+	// r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
+	// if err != nil {
+	// 	log.Fatalf("could not greet: %v", err)
+	// }
+	// log.Printf("Greeting: %s", r.GetMessage())
 
 	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+	// return &pb.HelloReply{Message: "Hello world"}, nil
 }
 
 // Decode implements textgeneration.GreeterServer
 func (s *server) Decode(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetName())
 
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	// // Set up a connection to the server.
+	// conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// if err != nil {
+	// 	log.Fatalf("did not connect: %v", err)
+	// }
+	// defer conn.Close()
+	// c := pb.NewGreeterClient(conn)
 
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	// // Contact the server and print out its response.
+	// ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	// defer cancel()
+	// r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
+	// if err != nil {
+	// 	log.Fatalf("could not greet: %v", err)
+	// }
+	// log.Printf("Greeting: %s", r.GetMessage())
 
-	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+	// return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+	return &pb.HelloReply{Message: "Hello world"}, nil
 }

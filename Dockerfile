@@ -20,12 +20,6 @@ RUN go mod download
 # COPY *.go ./
 COPY . . 
 
-
-
-#RUN go get -v -t .
-# RUN set -x && \
-#     go install github.com/Max-Gabriel-Susman/delphi-inferential-service/inference \ 
-#     go install github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler
 RUN go mod download
 # RUN go get ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -o /delphi-inferential-service
@@ -41,7 +35,7 @@ WORKDIR /
 
 COPY --from=build-stage /delphi-inferential-service /delphi-inferential-service
 
-EXPOSE 50052 50051
+EXPOSE 50051
 
 USER nonroot:nonroot
 
