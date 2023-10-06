@@ -124,7 +124,7 @@ push:
 	docker push brometheus/delphi-model-service:tagname
 
 update:
-	docker build --tag brometheus/delphi-inferential-service:v0.4.1 .
-	docker push brometheus/delphi-inferential-service:v0.4.1
+	docker build --tag brometheus/delphi-inferential-service:v0.4.0 .
+	docker push brometheus/delphi-inferential-service:v0.4.0
 
 # docker push brometheus/delphi-inferential-service:v0.1.0
