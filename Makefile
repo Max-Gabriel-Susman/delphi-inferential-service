@@ -118,13 +118,13 @@ run:
 		-e INFERENTIAL_DB_PORT=3306 \
 		-e ENABLE_MIGRATE=true \
 		-p 50051:50051 \
-		brometheus/delphi-inferential-service:v0.4.0
+		brometheus/delphi-inferential-service:v0.4.2
 
 push: 
 	docker push brometheus/delphi-model-service:tagname
 
 update:
-	docker build --tag brometheus/delphi-inferential-service:v0.4.0 .
-	docker push brometheus/delphi-inferential-service:v0.4.0
+	docker build --tag brometheus/delphi-inferential-service:v0.4.2 .
+	docker push brometheus/delphi-inferential-service:v0.4.2
 
 # docker push brometheus/delphi-inferential-service:v0.1.0
