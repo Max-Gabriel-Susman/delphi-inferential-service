@@ -117,7 +117,7 @@ run:
 		-e INFERENTIAL_DB_NAME=identity \
 		-e INFERENTIAL_DB_PORT=3306 \
 		-e ENABLE_MIGRATE=true \
-		-p 50051:50051 \
+		-p 50054:50054 \
 		brometheus/delphi-inferential-service:v0.4.5
 
 push: 
