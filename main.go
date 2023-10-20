@@ -101,8 +101,8 @@ func run(ctx context.Context, _ []string) error {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	tgServer := tg.NewTextGenerationServer()
-	pb.RegisterGreeterServer(s, &tgServer.Server)
+	tgs := tg.NewTextGenerationServer()
+	pb.RegisterGreeterServer(s, &tgs.Server)
 	// pb.RegisterGreeterServer(s, tg.Server{})
 	log.Printf("server listening at %v", lis.Addr())
 
