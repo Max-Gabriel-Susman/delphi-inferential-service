@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
+	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/clients/openai"
 	tg "github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/textgeneration"
 	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/textgeneration"
 )
@@ -49,15 +50,10 @@ func main() {
 }
 
 func run(ctx context.Context, _ []string) error {
-	// h := handler.API(handler.Deps{})
 
-	// Start HTTP Service
-	// api := http.Server{
-	// 	Handler: h,
-	// 	// Addr:              "127.0.0.1:80",
-	// 	Addr:              "0.0.0.0:8082",
-	// 	ReadHeaderTimeout: 2 * time.Second,
-	// }
+	apiKey := os.Getenv("api-key") // we'll want to get from SSM later
+	organization := os.Getenv("api-org")
+	openaiClient := openai.NewClient(apiKey, organization)
 
 	// Start GRPC Service
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -65,9 +61,8 @@ func run(ctx context.Context, _ []string) error {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	tgs := tg.NewTextGenerationServer()
+	tgs := tg.NewTextGenerationServer(openaiClient)
 	pb.RegisterGreeterServer(s, &tgs.Server)
-	// pb.RegisterGreeterServer(s, tg.Server{})
 	log.Printf("server listening at %v", lis.Addr())
 
 	// register the reflection service which allows clients to determine the methods
@@ -77,34 +72,6 @@ func run(ctx context.Context, _ []string) error {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-
-	// Make a channel to listen for errors coming from the listener
-	// serverErrors := make(chan error, 1)
-
-	// // Start listening for requests
-	// go func() {
-	// 	// log info about this
-	// 	serverErrors <- api.ListenAndServe()
-	// }()
-	// // Shutdown
-
-	// // logic for handling shutdown gracefully
-	// select {
-	// case err := <-serverErrors:
-	// 	return errors.Wrap(err, "server error")
-
-	// case <-ctx.Done():
-	// 	// log something
-
-	// 	// request a deadline for completion
-	// 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	// 	defer cancel()
-
-	// 	if err := api.Shutdown(ctx); err != nil {
-	// 		api.Close()
-	// 		return errors.Wrap(err, "could not stop server gracefully")
-	// 	}
-	// }
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

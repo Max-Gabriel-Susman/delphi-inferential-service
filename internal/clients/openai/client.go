@@ -23,7 +23,7 @@ func NewClient(apiKey string, organization string) *Client {
 }
 
 // Post makes a post request
-func (c *Client) Post(url string, input any) (response []byte, err error) {
+func (c *Client) Post(url string, input interface{}) (response []byte, err error) {
 	response = make([]byte, 0)
 
 	rJson, err := json.Marshal(input)
@@ -42,7 +42,7 @@ func (c *Client) Post(url string, input any) (response []byte, err error) {
 }
 
 // Get makes a get request
-func (c *Client) Get(url string, input any) (response []byte, err error) {
+func (c *Client) Get(url string, input interface{}) (response []byte, err error) {
 	if input != nil {
 		vals, _ := query.Values(input)
 		query := vals.Encode()

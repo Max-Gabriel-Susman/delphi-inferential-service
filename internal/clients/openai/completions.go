@@ -10,7 +10,7 @@ const COMPLETIONS_URL = "https://api.openai.com/v1/chat/completions"
 type CreateCompletionsRequest struct {
 	Model            string            `json:"model,omitempty"`
 	Messages         []Message         `json:"messages,omitempty"`
-	Prompt           StrArray          `json:"prompt,omitempty"`
+	Prompt           []string          `json:"prompt,omitempty"`
 	Suffix           string            `json:"suffix,omitempty"`
 	MaxTokens        int               `json:"max_tokens,omitempty"`
 	Temperature      float64           `json:"temperature,omitempty"`
@@ -19,7 +19,7 @@ type CreateCompletionsRequest struct {
 	Stream           bool              `json:"stream,omitempty"`
 	LogProbs         int               `json:"logprobs,omitempty"`
 	Echo             bool              `json:"echo,omitempty"`
-	Stop             StrArray          `json:"stop,omitempty"`
+	Stop             []string          `json:"stop,omitempty"`
 	PresencePenalty  float64           `json:"presence_penalty,omitempty"`
 	FrequencyPenalty float64           `json:"frequency_penalty,omitempty"`
 	BestOf           int               `json:"best_of,omitempty"`
