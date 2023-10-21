@@ -13,8 +13,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/inference"
 	tg "github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/textgeneration"
+	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/textgeneration"
 )
 
 const (

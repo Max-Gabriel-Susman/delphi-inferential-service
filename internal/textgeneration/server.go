@@ -3,12 +3,12 @@ package textgeneration
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
-	"time"
+	"os"
 
 	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/inference"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/clients/openai"
 )
 
 const defaultName = "world"
@@ -44,25 +44,49 @@ func NewTextGenerationServer() *TextGenerationServer {
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetName())
 
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	// // Set up a connection to the server.
+	// conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// if err != nil {
+	// 	log.Fatalf("did not connect: %v", err)
+	// }
+	// defer conn.Close()
+	// c := pb.NewGreeterClient(conn)
 
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	// // Contact the server and print out its response.
+	// ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	// defer cancel()
+	// r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
+	// if err != nil {
+	// 	log.Fatalf("could not greet: %v", err)
+	// }
+	// log.Printf("Greeting: %s", r.GetMessage())
 
-	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
-	// return &pb.HelloReply{Message: "Hello world"}, nil
+	// return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+
+	apiKey := os.Getenv("API_KEY")
+	organization := os.Getenv("API_ORG")
+
+	client := openai.NewClient(apiKey, organization)
+
+	r := openai.CreateCompletionsRequest{
+		Model: "gpt-3.5-turbo",
+		Messages: []openai.Message{
+			{
+				Role:    "user",
+				Content: "Say this is a test!",
+			},
+		},
+		Temperature: 0.7,
+	}
+
+	completions, err := client.CreateCompletions(r)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(completions)
+
+	return &pb.HelloReply{Message: "Hello world"}, nil
 }
 
 // Decode implements textgeneration.GreeterServer
