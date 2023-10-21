@@ -16,8 +16,8 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/inference"
-	tg "github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/clients/textgeneration"
 	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler"
+	tg "github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/textgeneration"
 )
 
 const (
