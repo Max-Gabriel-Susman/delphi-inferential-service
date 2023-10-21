@@ -1,4 +1,4 @@
-package goopenai
+package openai
 
 import (
 	"context"

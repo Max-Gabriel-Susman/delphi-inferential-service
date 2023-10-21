@@ -6,17 +6,14 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"net/http"
 	"os"
 	"os/signal"
-	"time"
+	"syscall"
 
-	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
 	pb "github.com/Max-Gabriel-Susman/delphi-inferential-service/inference"
-	"github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/handler"
 	tg "github.com/Max-Gabriel-Susman/delphi-inferential-service/internal/textgeneration"
 )
 
@@ -52,48 +49,15 @@ func main() {
 }
 
 func run(ctx context.Context, _ []string) error {
-	// var cfg struct {
-	// 	ServiceName string `env:"SERVICE_NAME" envDefault:"delphi-inferential-service"`
-	// 	Env         string `env:"ENV" envDefault:"local"`
-	// 	Database    struct {
-	// 		User   string `env:"INFERENTIAL_DB_USER,required"`
-	// 		Pass   string `env:"INFERENTIAL_DB_PASSWORD,required"`
-	// 		Host   string `env:"INFERENTIAL_DB_HOST"`
-	// 		Port   string `env:"INFERENTIAL_DB_PORT" envDefault:"3306"`
-	// 		DBName string `env:"INFERENTIAL_DB_Name" envDefault:"identity"`
-	// 		Params string `env:"INFERENTIAL_DB_Param_Overrides" envDefault:"parseTime=true"`
-	// 	}
-	// 	Datadog struct {
-	// 		Disable bool `env:"DD_DISABLE"`
-	// 	}
-	// 	Migration struct {
-	// 		Enable bool `env:"ENABLE_MIGRATE"`
-	// 	}
-	// }
-	// if err := env.Parse(&cfg); err != nil {
-	// 	return errors.Wrap(err, "parsing configuration")
-	// }
-
-	// create grpc connection
-	// conn, err := grpc.Dial("localhost:9092")
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// create text generation client
-	// tgc := textgeneration.NewTextGenerationServiceClient(conn)
-	// _ = textgeneration.NewTextGenerationServiceClient(conn)
-
-	// h := handler.API(handler.Deps{}, tgc) // needs implementation l8r
-	h := handler.API(handler.Deps{})
+	// h := handler.API(handler.Deps{})
 
 	// Start HTTP Service
-	api := http.Server{
-		Handler: h,
-		// Addr:              "127.0.0.1:80",
-		Addr:              "0.0.0.0:8082",
-		ReadHeaderTimeout: 2 * time.Second,
-	}
+	// api := http.Server{
+	// 	Handler: h,
+	// 	// Addr:              "127.0.0.1:80",
+	// 	Addr:              "0.0.0.0:8082",
+	// 	ReadHeaderTimeout: 2 * time.Second,
+	// }
 
 	// Start GRPC Service
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -115,32 +79,36 @@ func run(ctx context.Context, _ []string) error {
 	}
 
 	// Make a channel to listen for errors coming from the listener
-	serverErrors := make(chan error, 1)
+	// serverErrors := make(chan error, 1)
 
-	// Start listening for requests
-	go func() {
-		// log info about this
-		serverErrors <- api.ListenAndServe()
-	}()
-	// Shutdown
+	// // Start listening for requests
+	// go func() {
+	// 	// log info about this
+	// 	serverErrors <- api.ListenAndServe()
+	// }()
+	// // Shutdown
 
-	// logic for handling shutdown gracefully
-	select {
-	case err := <-serverErrors:
-		return errors.Wrap(err, "server error")
+	// // logic for handling shutdown gracefully
+	// select {
+	// case err := <-serverErrors:
+	// 	return errors.Wrap(err, "server error")
 
-	case <-ctx.Done():
-		// log something
+	// case <-ctx.Done():
+	// 	// log something
 
-		// request a deadline for completion
-		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-		defer cancel()
+	// 	// request a deadline for completion
+	// 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	// 	defer cancel()
 
-		if err := api.Shutdown(ctx); err != nil {
-			api.Close()
-			return errors.Wrap(err, "could not stop server gracefully")
-		}
-	}
+	// 	if err := api.Shutdown(ctx); err != nil {
+	// 		api.Close()
+	// 		return errors.Wrap(err, "could not stop server gracefully")
+	// 	}
+	// }
+
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+	<-sc
 
 	return nil
 }
