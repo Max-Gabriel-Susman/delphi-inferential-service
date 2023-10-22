@@ -1,0 +1,3 @@
+[submodule "delphi-build-utils"]
+	path = delphi-build-utils
+	url = https://github.com/Max-Gabriel-Susman/delphi-build-utils

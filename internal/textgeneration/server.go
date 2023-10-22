@@ -25,13 +25,13 @@ type Server interface {
 	Decode(context.Context, *pb.HelloRequest) (*pb.HelloReply, error)
 }
 
-type TextGenerationServer struct {
-	Server server
-}
-
 type server struct {
 	pb.UnimplementedGreeterServer
 	OpenAIClient *openai.Client
+}
+
+type TextGenerationServer struct {
+	Server server
 }
 
 func NewTextGenerationServer(openaiClient *openai.Client) *TextGenerationServer {
