@@ -37,7 +37,7 @@ jobs:
     steps: 
       # it seems like we're going to eventually want to run these 
       - name: Hello World
-        run: echo "testing golang"
+        run: go test ./...
 
       # okay, so we're going to need to determine how to get make on our builld image somehow 
       #- name: Test
