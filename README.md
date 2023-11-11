@@ -1,5 +1,7 @@
-### Delphi Inferential Service
+### Delphi Training Service
 
 ## TODOs:
 
-`* Implement tensor parallelism for inference jobs
+
+
+* implement fsdp for training jobs:
