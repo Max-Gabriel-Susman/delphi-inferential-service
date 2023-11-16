@@ -1,19 +1,3 @@
-#
-# Copyright 2019 The Cloud Robotics Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 HOST_SYSTEM = $(shell uname | cut -f 1 -d_)
 SYSTEM ?= $(HOST_SYSTEM)
 CXX = g++
@@ -54,3 +38,17 @@ greeter-client: helloworld.pb.o helloworld.grpc.pb.o client/client.o
 
 clean:
 	rm -f *.o client/*.o server/*.o *.pb *.pb.cc *.pb.h
+
+compile-service:
+	g++ -std=c++14 summer.cpp summerMain.cpp -lgtest -lgtest_main -pthread -o sumProgram
+
+test-service: 
+	./sumProgram
+
+# compile orchestration
+comp-orch:
+	g++ -std=c++14 main.cpp train.cpp setup.cpp create_loaders.cpp model_checkpoint.cpp -o delphi-training-orchestration-service
+
+# execute orchestration 
+exec-orch:
+	./delphi-training-orchestration-service
