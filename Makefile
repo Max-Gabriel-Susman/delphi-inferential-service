@@ -47,8 +47,8 @@ test-service:
 
 # compile orchestration
 comp-orch:
-	g++ -std=c++14 main.cpp train.cpp setup.cpp create_loaders.cpp model_checkpoint.cpp -o delphi-training-orchestration-service
+	g++ -std=c++14 main.cpp train.cpp setup.cpp create_loaders.cpp model_checkpoint.cpp -o delphi-inferential-service
 
 # execute orchestration 
 exec-orch:
-	./delphi-training-orchestration-service
+	./delphi-inferential-service
