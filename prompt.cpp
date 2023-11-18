@@ -2,6 +2,7 @@
 #include <string>
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
+#include <cstdlib>
 
 using std::string;
 using std::cout;
@@ -35,7 +36,8 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* response
 
 // Construct a POST request to the chat model endpoint and process the response.
 string getCompletion(const string& prompt, const string& model = "gpt-3.5-turbo") {
-    string apiKey = ""; // add your API key, the app will not work without it
+    const char* apiKey = std::getenv("API_KEY");
+    // string apiKey = ""; // add your API key, the app will not work without it
     string baseUrl = "https://api.openai.com/v1/chat/completions";
     string response;
     CURL* curl = curl_easy_init();
