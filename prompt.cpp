@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <curl/curl.h>
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
+#include "external/nlohmann/json.hpp"
 #include <cstdlib>
 
 using std::string;
