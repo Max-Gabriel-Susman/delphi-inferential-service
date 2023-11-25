@@ -50,8 +50,8 @@ func main() {
 }
 
 func run(ctx context.Context, _ []string) error {
-	apiKey := os.Getenv("api-key") // we'll want to get from SSM later
-	organization := os.Getenv("api-org")
+	apiKey := os.Getenv("API_KEY") // we'll want to get from SSM later
+	organization := os.Getenv("API_ORG")
 	openaiClient := openai.NewClient(apiKey, organization)
 
 	// Start GRPC Service

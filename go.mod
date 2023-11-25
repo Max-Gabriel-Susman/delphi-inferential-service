@@ -9,10 +9,7 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go v1.46.1 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
