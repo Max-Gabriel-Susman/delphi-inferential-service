@@ -6,13 +6,8 @@ build:
 
 run: 
 	docker run \
-		-e API_ADDRESS=0.0.0.0:8082 \
-		-e INFERENTIAL_DB_USER=usr \
-		-e INFERENTIAL_DB_PASSWORD=identity \
-		-e INFERENTIAL_DB_HOST=127.0.0.1 \
-		-e INFERENTIAL_DB_NAME=identity \
-		-e INFERENTIAL_DB_PORT=3306 \
-		-e ENABLE_MIGRATE=true \
+		-e API_KEY \
+		-e API_ORG \
 		-p 50054:50054 \
 		brometheus/delphi-inferential-service:v0.4.5
 
@@ -22,4 +17,7 @@ push:
 update:
 	docker build --tag brometheus/delphi-inferential-service:v0.4.5 .
 	docker push brometheus/delphi-inferential-service:v0.4.5
-]
+
+# grpcurl -plaintext -v localhost:50054 list Greeter
+
+# grpcurl -plaintext -d '{"name": "tell me Im pretty"}' localhost:50054 Greeter/SayHello

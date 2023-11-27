@@ -2,7 +2,21 @@
 
 The **Delphi Inferential Service** is a Go microservice designed to provide inferential capabilities as part of the Delphi platform.
 
-## Deployment Usage Guide 
+## Table of Contents 
+
+<items>
+
+## Local Usage Guide 
+
+# Overview
+
+# Setup 
+
+# Operation
+
+## AWS Usage Guide 
+
+# Overview 
 
 # Setup
 
@@ -16,7 +30,7 @@ Prerequisites:
 
 * aws cli?
 
-# Delphi Deployment and Operation
+# Delphi Deployment and Operation and Teardown (maybe make this into three distinct subsections)
 
 eksctl deployment: ...
 
@@ -29,3 +43,12 @@ eksctl teardown: ...
 aws console monitoring: ... 
 
 # Conclusion
+
+
+## Dependencies
+
+## CI 
+
+## Testing 
+
+## Building & Artifact Repositories (perhaps this should be two distinct sub sections)
